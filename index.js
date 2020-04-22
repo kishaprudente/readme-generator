@@ -61,6 +61,24 @@ function writeToFile(fileName, data) {
   fs.appendFile(fileName, data, (err) => console.log(err));
 }
 
-function init() {}
+function init() {
+  inquirer.prompt(questions).then((response) => {
+    const user = response.username;
+    const userURL = `https://api.github.com/users/${user}`;
+    console.log(process.env.API_KEY);
+    const config = {
+      headers: {
+        Authorization: `token ${process.env.API_KEY}`,
+      },
+    };
+    axios.get(userURL, config).then((response) => {
+      const userEmail = response.data.email;
+      const avatar = response.data.avatar_url;
+      console.log(response.data);
+      console.log(userEmail);
+      console.log(avatar);
+    });
+  });
+}
 
 init();
