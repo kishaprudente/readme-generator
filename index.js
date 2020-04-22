@@ -56,3 +56,11 @@ const questions = [
     message: "How do we test?",
   },
 ];
+
+function writeToFile(fileName, data) {
+  fs.appendFile(fileName, data, (err) => console.log(err));
+}
+
+function init() {}
+
+init();
