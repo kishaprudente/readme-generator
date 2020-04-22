@@ -1,9 +1,12 @@
+// Dependencies
 require("dotenv").config();
 const inquirer = require("inquirer");
 const fs = require("fs");
 const axios = require("axios");
 const api = require("./utils/api");
+const generateMarkdown = require("./utils/generateMarkdown");
 
+// list of questions for readme generator
 const questions = [
   {
     type: "input",
@@ -57,25 +60,33 @@ const questions = [
   },
 ];
 
+// write the data to the readme file
 function writeToFile(fileName, data) {
-  fs.appendFile(fileName, data, (err) => console.log(err));
+  //generate markdown here
+  const generatedReadMe = generateMarkdown(data);
+  fs.appendFile(fileName, generatedReadMe, (err) => {
+    console.log(generatedReadMe);
+    console.log("README.md Generated!");
+  });
 }
 
 function init() {
-  inquirer.prompt(questions).then((response) => {
-    const user = response.username;
-    const userURL = `https://api.github.com/users/${user}`;
-    const config = {
-      headers: {
-        Authorization: `token ${process.env.API_KEY}`,
-      },
-    };
-    axios.get(userURL, config).then((response) => {
-      const userEmail = response.data.email;
-      const avatar = response.data.avatar_url;
-      console.log(response.data);
-    });
-  });
+  inquirer
+    .prompt(questions)
+    .then((response) => {
+      const readMeData = { ...response };
+      api.getUser(response.username).then((res) => {
+        const { email, avatar_url } = res.data;
+        const newReadMeData = {
+          ...readMeData,
+          email: email,
+          avatar: avatar_url,
+        };
+        console.log(newReadMeData);
+        writeToFile("README.md", JSON.stringify(newReadMeData, null, 2));
+      });
+    })
+    .catch((err) => console.log(err));
 }
 
 init();
