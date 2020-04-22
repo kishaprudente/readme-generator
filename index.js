@@ -65,7 +65,6 @@ function init() {
   inquirer.prompt(questions).then((response) => {
     const user = response.username;
     const userURL = `https://api.github.com/users/${user}`;
-    console.log(process.env.API_KEY);
     const config = {
       headers: {
         Authorization: `token ${process.env.API_KEY}`,
@@ -75,8 +74,6 @@ function init() {
       const userEmail = response.data.email;
       const avatar = response.data.avatar_url;
       console.log(response.data);
-      console.log(userEmail);
-      console.log(avatar);
     });
   });
 }
