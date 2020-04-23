@@ -69,7 +69,6 @@ function init() {
           email: email,
           avatar: avatar_url,
         };
-        console.log(newReadMeData);
         // append data to README.md file
         writeToFile("README.md", newReadMeData);
       });
