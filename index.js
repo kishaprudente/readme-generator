@@ -24,21 +24,6 @@ const questions = [
     message: "Describe your project",
   },
   {
-    type: "checkbox",
-    name: "tableOfContents",
-    message: "What should be in your Table of Contents?",
-    choices: [
-      "Project Title",
-      "Description",
-      "Installation",
-      "Usage",
-      "Lisense",
-      "Contributing",
-      "Tests",
-      "Questions",
-    ],
-  },
-  {
     type: "input",
     name: "installation",
     message: "How do we install?",
@@ -63,9 +48,7 @@ const questions = [
 // write the data to the readme file
 function writeToFile(fileName, data) {
   //generate markdown here
-  const generatedReadMe = generateMarkdown(data);
-  fs.appendFile(fileName, generatedReadMe, (err) => {
-    console.log(generatedReadMe);
+  fs.writeFile(fileName, generateMarkdown(data), () => {
     console.log("README.md Generated!");
   });
 }
@@ -74,18 +57,24 @@ function init() {
   inquirer
     .prompt(questions)
     .then((response) => {
+      // readMeData object with all the response object from prompt
       const readMeData = { ...response };
+      // axios request from api function
       api.getUser(response.username).then((res) => {
+        // take email and avatar_url from response of axios requesr
         const { email, avatar_url } = res.data;
+        // newReadMeData that has readMeData with added email and avatar
         const newReadMeData = {
           ...readMeData,
           email: email,
           avatar: avatar_url,
         };
         console.log(newReadMeData);
-        writeToFile("README.md", JSON.stringify(newReadMeData, null, 2));
+        // append data to README.md file
+        writeToFile("README.md", newReadMeData);
       });
     })
+    // catch the error
     .catch((err) => console.log(err));
 }
 
