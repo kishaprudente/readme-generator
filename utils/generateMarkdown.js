@@ -8,9 +8,9 @@ function generateMarkdown(data) {
 
 * [Installation](#installation)
 * [Usage](#usage)
-* [License](#license)
-* [Contributors](#contributors)
-* [Tests](#test)
+* [Tests](#tests)
+* [Contributing](#contributing)
+* [Questions](#questions)
 
 ## Installation
     ${data.installation}
