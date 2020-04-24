@@ -53,28 +53,29 @@ function writeToFile(fileName, data) {
   });
 }
 
-function init() {
-  inquirer
-    .prompt(questions)
-    .then((response) => {
-      // readMeData object with all the response object from prompt
-      const readMeData = { ...response };
-      // axios request from api function
-      api.getUser(response.username).then((res) => {
-        // take email and avatar_url from response of axios requesr
-        const { email, avatar_url } = res.data;
-        // newReadMeData that has readMeData with added email and avatar
-        const newReadMeData = {
-          ...readMeData,
-          email: email,
-          avatar: avatar_url,
-        };
-        // append data to README.md file
-        writeToFile("README.md", newReadMeData);
-      });
-    })
+async function init() {
+  try {
+    const promptData = await inquirer.prompt(questions);
+    // readMeData object with all data from the prompt
+    const readMeData = { ...promptData };
+    // get user key from promptData
+    const { username } = promptData;
+    // axios request from api function
+    const githubUser = await api.getUser(username);
+    // take email and avatar_url from response of axios requesr
+    const { email, avatar_url } = githubUser.data;
+    // newReadMeData that has readMeData with added email and avatar
+    const newReadMeData = {
+      ...readMeData,
+      email: email,
+      avatar: avatar_url,
+    };
+    // append data to README.md file
+    await writeToFile("README.md", newReadMeData);
+  } catch (err) {
     // catch the error
-    .catch((err) => console.log(err));
+    throw err;
+  }
 }
 
 init();
