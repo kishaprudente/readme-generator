@@ -6,7 +6,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Tests](#test)
+- [Tests](#tests)
 - [Contributing](#contributing)
 - [Questions](#questions)
 
@@ -22,7 +22,7 @@
 
 ## Tests
 
-    no tests for this project
+    no test for this project
 
 ## Contributing
 
